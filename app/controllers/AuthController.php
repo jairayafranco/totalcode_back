@@ -18,8 +18,8 @@ class AuthController {
         echo json_encode($data);
     }
 
-    // public function verifyJWT() {
-    //     $data = $this->authModel->session();
-    //     echo json_encode($data);
-    // }
+    public function verifyJWT() {
+        $data = $this->authModel->session();
+        echo json_encode($data);
+    }
 }

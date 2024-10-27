@@ -4,7 +4,12 @@ require_once '../app/core/Router.php';
 header('Content-Type: application/json'); // Tipo de contenido JSON
 header("Access-Control-Allow-Origin: *"); // Permite todas las solicitudes
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS"); // Métodos permitidos
-header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Encabezados permitidos
+header("Access-Control-Allow-Headers: Authorization, Content-Type"); // Encabezados permitidos
+
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
 $request_uri = $_SERVER['REQUEST_URI']; // Obtiene la URL de la peticion
 $base_path = dirname($_SERVER['SCRIPT_NAME']);  // Obtiene el prefijo "/totalcode_back/public"

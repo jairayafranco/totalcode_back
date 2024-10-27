@@ -51,22 +51,26 @@ class Auth {
         ];
     }
 
-    // public function session() {
-    //     if (isset($_COOKIE['auth_token'])) {
-    //         $token = $_COOKIE['auth_token'];
-    //         $decoded = $this->verifyJWT($token, $this->key);
+    public function session() {
+        $headers = apache_request_headers(); // Obtiene todos los encabezados
+        if (isset($headers['Authorization'])) {
+            // Si el encabezado Authorization existe
+            $matches = [];
+            // Usamos una expresión regular para extraer el token
+            if (preg_match('/Bearer\s(\S+)/', $headers['Authorization'], $matches)) {
+                $decoded = $this->verifyJWT($matches[1], KEY);
 
-    //         if ($decoded) {
-    //             return ['message' => 'Acceso permitido', 'data' => $decoded];
-    //         } else {
-    //             http_response_code(401);
-    //             return ['message' => 'Token invalido o expirado'];
-    //         }
-    //     } else {
-    //         http_response_code(401);
-    //         return ['message' => 'No se proporciono el token'];
-    //     }
-    // }
+                if ($decoded) {
+                    return ['message' => 'Acceso permitido', 'data' => $decoded, 'status' => true];
+                } else {
+                    return ['message' => 'Token invalido o expirado', 'status' => false];
+                }
+            }
+        }else {
+            http_response_code(401);
+            return ['message' => 'No se proporciono el token'];
+        }
+    }
 
     // Función para generar el token
     public function generateJWT($header, $payload, $secret) {
@@ -82,23 +86,23 @@ class Auth {
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($data)); // Reemplazar los caracteres no permitidos en base64
     } 
 
-    // public function verifyJWT($token, $secret) {
-    //     $parts = explode('.', $token); 
-    //     if (count($parts) !== 3) return false;
+    public function verifyJWT($token, $secret) {
+        $parts = explode('.', $token); 
+        if (count($parts) !== 3) return false;
     
-    //     list($header_encoded, $payload_encoded, $signature_provided) = $parts; 
+        list($header_encoded, $payload_encoded, $signature_provided) = $parts; 
     
-    //     $signature = hash_hmac('SHA256', "$header_encoded.$payload_encoded", $secret, true); // Crear la firma
-    //     $signature_verified = $this->base64UrlEncode($signature); // Codificar la firma en base64
+        $signature = hash_hmac('SHA256', "$header_encoded.$payload_encoded", $secret, true); // Crear la firma
+        $signature_verified = $this->base64UrlEncode($signature); // Codificar la firma en base64
     
-    //     if ($signature_verified !== $signature_provided) return false;
+        if ($signature_verified !== $signature_provided) return false;
     
-    //     $payload = json_decode(base64_decode($payload_encoded), true); // Decodificar el payload
+        $payload = json_decode(base64_decode($payload_encoded), true); // Decodificar el payload
     
-    //     if (isset($payload['exp']) && $payload['exp'] < time()) return false; // Verificar si el token ha expirado
+        if (isset($payload['exp']) && $payload['exp'] < time()) return false; // Verificar si el token ha expirado
     
-    //     return $payload;
-    // }
+        return $payload;
+    }
 
     public function __destruct() {
         $this->connection->close();
