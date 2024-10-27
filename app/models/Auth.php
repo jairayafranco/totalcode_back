@@ -41,16 +41,6 @@ class Auth {
         }
     }
 
-    public function logout() {
-        // Eliminar la cookie del token
-        setcookie('auth_token', '', time() - 3600, "/", "", false, false);
-
-        return [
-            'message' => 'Sesión cerrada',
-            'status' => true
-        ];
-    }
-
     public function session() {
         $headers = apache_request_headers(); // Obtiene todos los encabezados
         if (isset($headers['Authorization'])) {
