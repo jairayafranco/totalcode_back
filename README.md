@@ -12,14 +12,12 @@ Esta API desarrollada en PHP  permite consultar información sobre órdenes de p
 
 - **PHP**: Lenguaje principal para el desarrollo de la API.
 - **MySQL**: Base de datos donde se almacenan los datos de las órdenes.
-- **JavaScript y JQuery**: Interfaz para consumir la API y mostrar datos en el front-end.
 - **XAMPP**: Entorno de desarrollo local que integra Apache y MySQL para la ejecución de la API.
 
 ## Requisitos
 
 - XAMPP (para Apache y MySQL)
 - PHP 7.4 o superior
-- jQuery (si se utiliza en el front-end)
 
 ## Instalación
 
