@@ -18,7 +18,7 @@ class Auth {
             $header = ['alg' => 'HS256', 'typ' => 'JWT'];
             $payload = [
                 'iat' => time(),
-                'exp' => time() + (5 * 60), // El token expira en 5 minutos
+                'exp' => time() + (60 * 60), // El token expira en 1 hora
                 'username' => $username
             ];
 
